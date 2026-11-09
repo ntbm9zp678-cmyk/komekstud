@@ -9,7 +9,11 @@
 
 ## Іске қосу
 Ешқандай орнату қажет емес — `index.html` файлын браузерде ашыңыз.
-Хостинг: GitHub Pages, Netlify немесе кез келген статикалық хостинг.
+
+## GitHub Pages
+`main` тармағына әр push кезінде `.github/workflows/pages.yml` сайтты автоматты түрде жариялайды.
+Бір реттік баптау: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+Сайт мекенжайы: https://ntbm9zp678-cmyk.github.io/komekstud/
 
 ## Байланыс
 - Телефон / WhatsApp: 8 700 233 95 20
