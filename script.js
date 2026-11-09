@@ -25,13 +25,16 @@
   // unit: what qty counts; prices: [with antiplagiat, without]
   var SERVICES = {
     diploma:      { name: 'Дипломдық жұмыс', fixed: '150 000 – 250 000 ₸', note: 'Нақты баға тақырып пен талаптарға қарай келісіледі.' },
-    dissertation: { name: 'Диссертация', fixed: 'Жеке есептеледі', note: 'Баға тақырып пен көлемге қарай анықталады.' },
-    course:       { name: 'Курстық жұмыс', unit: 'Бет саны', short: 'бет', prices: [900, 450], note: 'Титул парағы, жоспар және әдебиеттер тізімі тегін.' },
+    dissertation: { name: 'Диссертация', fixed: '200 000 ₸-ден', note: 'Нақты баға тақырып пен көлемге қарай есептеледі.' },
+    course:       { name: 'Курстық жұмыс', unit: 'Бет саны', short: 'бет', prices: [850, 450], note: 'Титул парағы, жоспар және әдебиеттер тізімі тегін.' },
     presentation: { name: 'Презентация', unit: 'Слайд саны', short: 'слайд', prices: [400, 200], freeSlides: 2, note: 'Бірінші және соңғы слайд тегін.' },
-    referat:      { name: 'Реферат', unit: 'Бет саны', short: 'бет', prices: [500, 250] },
+    referat:      { name: 'Реферат', unit: 'Бет саны', short: 'бет', prices: [500, 250], note: 'Титул парағы, жоспар және әдебиеттер тізімі тегін.' },
     essay:        { name: 'Эссе', unit: 'Бет саны', short: 'бет', prices: [1500, 800] },
-    article:      { name: 'Мақала', unit: 'Бет саны', short: 'бет', prices: [2000], noPlag: true },
-    video:        { name: 'Видео дайындау', video: { '30': 2500, '60': 5000 } }
+    article:      { name: 'Мақала', unit: 'Бет саны', short: 'бет', prices: [1500], noPlag: true, from: true, note: 'Бет бағасы 1 500 ₸-ден басталады.' },
+    video:        { name: 'Видео дайындау', video: { '30': 2500, '60': 5000 } },
+    kmzh:         { name: 'Қысқа мерзімді жоспар (ҚМЖ)', unit: 'Жоспар саны', short: 'дана', prices: [2500], noPlag: true },
+    resume:       { name: 'Резюме жазу (дизайнмен)', fixed: '1 000 ₸' },
+    originality:  { name: 'Оригиналдылықты көтеру / ИИ түсіру', fixed: 'Келісім бойынша', note: 'Кодировка, оригиналдылықты көтеру, ИИ түсіру — 80–100%.' }
   };
 
   var form = document.getElementById('orderForm');
@@ -54,14 +57,14 @@
 
   function calc() {
     var s = SERVICES[service.value];
-    if (s.fixed) return { text: s.fixed, note: s.note };
+    if (s.fixed) return { text: s.fixed, note: s.note || '' };
     if (s.video) {
       return { text: fmt(s.video[radio('video')]), note: '' };
     }
     var n = Math.max(1, Math.min(500, parseInt(qty.value, 10) || 0));
     var price = s.noPlag ? s.prices[0] : s.prices[radio('plag') === 'yes' ? 0 : 1];
     var paid = s.freeSlides ? Math.max(0, n - s.freeSlides) : n;
-    return { text: fmt(paid * price), note: s.note || '' };
+    return { text: fmt(paid * price) + (s.from ? '-ден' : ''), note: s.note || '' };
   }
 
   function update() {
