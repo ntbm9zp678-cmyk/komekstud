@@ -1,0 +1,2 @@
+# komekstud
+KomekStud жобасының сайты
