@@ -99,9 +99,10 @@
   var t = new Date();
   deadline.min = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
 
-  // ---- Submit → WhatsApp ----
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
+  // ---- Send → WhatsApp (real link, works everywhere) ----
+  var sendBtn = document.getElementById('sendBtn');
+
+  function validate() {
     var name = document.getElementById('name').value.trim();
     var phone = document.getElementById('phone').value.trim();
     var ok = true;
@@ -110,17 +111,16 @@
       field.classList.toggle('invalid', !p[1]);
       if (!p[1]) ok = false;
     });
-    if (!ok) {
-      form.querySelector('.invalid input').focus();
-      return;
-    }
+    return ok;
+  }
 
+  function buildUrl() {
     var s = SERVICES[service.value];
     var lines = [
       'Сәлеметсіз бе! KomekStud сайтынан тапсырыс:',
       '',
-      '👤 Аты: ' + name,
-      '📞 Телефон: ' + phone,
+      '👤 Аты: ' + document.getElementById('name').value.trim(),
+      '📞 Телефон: ' + document.getElementById('phone').value.trim(),
       '📌 Жұмыс түрі: ' + s.name
     ];
     if (s.unit) {
@@ -136,9 +136,21 @@
     var topic = document.getElementById('topic').value.trim();
     if (topic) lines.push('📝 Тақырыбы/талаптар: ' + topic);
     lines.push('💰 Болжамды баға: ' + calc().text);
+    return 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(lines.join('\n'));
+  }
 
-    var url = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(lines.join('\n'));
-    window.open(url, '_blank', 'noopener');
+  sendBtn.addEventListener('click', function (e) {
+    if (!validate()) {
+      e.preventDefault();
+      form.querySelector('.invalid input').focus();
+      return;
+    }
+    sendBtn.href = buildUrl();
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    sendBtn.click();
   });
 
   form.querySelectorAll('input').forEach(function (inp) {
